@@ -47,7 +47,13 @@ struct ContactsList: View {
                         try await self.database.deleteLocalData()
                     }
                 }
-                
+
+                Button("Force Sync") {
+                    Task {
+                        try await self.database.forceSync()
+                    }
+                }
+
                 Button(action: {
                     self.addNewContact()
                 }, label: {

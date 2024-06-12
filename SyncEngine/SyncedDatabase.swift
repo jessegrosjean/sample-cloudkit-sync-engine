@@ -10,7 +10,7 @@ import os.log
 final actor SyncedDatabase : Sendable, ObservableObject {
     
     /// The CloudKit container to sync with.
-    static let container: CKContainer = CKContainer(identifier: "iCloud.com.apple.samples.cloudkit.SyncEngine")
+    static let container: CKContainer = CKContainer(identifier: "iCloud.com.hogbaysoftware.samples.cloudkit.SyncEngine")
 
     /// The sync engine being used to sync.
     /// This is lazily initialized. You can re-initialize the sync engine by setting `_syncEngine` to nil then calling `self.syncEngine`.
@@ -391,4 +391,12 @@ extension SyncedDatabase {
         self.syncEngine.state.add(pendingDatabaseChanges: [ .deleteZone(zoneID) ])
         try await self.syncEngine.sendChanges()
     }
+
+    func forceSync() async throws {
+        Logger.database.info("Refreshing")
+        
+        try await syncEngine.sendChanges()
+        try await syncEngine.fetchChanges()
+    }
+
 }
